@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vienna Thirstday 2026</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg:     #111116;
+  --card:   rgba(20,20,28,0.82);
+  --card2:  rgba(26,26,36,0.90);
+  --border: rgba(255,255,255,0.07);
+  --border-a: rgba(255,255,255,0.12);
+  --mg:     #c0005e;
+  --mg2:    #e0007a;
+  --mg3:    #ff4da6;
+  --mgdim:  rgba(192,0,94,0.08);
+  --mgdim2: rgba(192,0,94,0.16);
+  --text:   #e0e0ea;
+  --sub:    #60607a;
+  --sub2:   #3a3a52;
+  --win:    #00b870;
+  --winbg:  rgba(0,184,112,0.07);
+  --lose:   #e03040;
+  --losebg: rgba(224,48,64,0.07);
+  --draw:   #e09000;
+  --drawbg: rgba(224,144,0,0.07);
+  --gold:   #e8c840;
+  --silver: #8898a8;
+  --bronze: #a06830;
+  --font: 'Courier New', Courier, 'Lucida Console', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 14px;
+  letter-spacing: 0.02em;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── PARTICLE CANVAS ── */
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── ALL CONTENT ABOVE CANVAS ── */
+.app { position: relative; z-index: 1; }
+
+/* ── HEADER ─────────────────────────────────────────────────── */
+.header {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-a);
+  border-top: 1px solid rgba(192,0,94,0.4);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.logo-wrap { flex-shrink: 0; perspective: 400px; }
+.logo-spin {
+  display: block;
+  animation: logoSpin 6s linear infinite;
+  transform-origin: center center;
+}
+@keyframes logoSpin {
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+.header-info { flex: 1; }
+.header-info h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: var(--font);
+}
+.header-info p {
+  font-size: 10px;
+  color: var(--sub);
+  margin-top: 4px;
+  letter-spacing: 0.06em;
+}
+.update-badge {
+  background: var(--mgdim);
+  border: 1px solid var(--mgdim2);
+  color: var(--sub);
+  font-size: 10px;
+  padding: 5px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-family: var(--font);
+  letter-spacing: 0.04em;
+}
+
+/* ── NAV ─────────────────────────────────────────────────────── */
+.nav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.nav-btn {
+  flex: 1; min-width: 72px;
+  padding: 9px 4px;
+  background: var(--card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  color: var(--sub);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: center;
+  font-family: var(--font);
+}
+.nav-btn:hover { border-color: var(--border-a); color: var(--text); }
+.nav-btn.active { background: var(--mgdim); border-color: rgba(192,0,94,0.35); color: var(--mg3); }
+
+/* ── PANELS ──────────────────────────────────────────────────── */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── GLASSMORPHISM CARD BASE ─────────────────────────────────── */
+.glass {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.glass:hover { border-color: var(--border-a); }
+
+/* ── STAT CARDS ──────────────────────────────────────────────── */
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+.stat-card {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 10px;
+  text-align: center;
+  transition: border-color 0.15s;
+}
+.stat-card:hover { border-color: var(--border-a); }
+.stat-card .num {
+  font-size: 28px; font-weight: 700; line-height: 1;
+  color: var(--text); font-family: var(--font);
+}
+.stat-card .lbl {
+  font-size: 9px; color: var(--sub); margin-top: 5px;
+  text-transform: uppercase; letter-spacing: 0.12em; font-family: var(--font);
+}
+
+/* ── SECTION LABEL ───────────────────────────────────────────── */
+.section-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--sub2); margin-bottom: 6px;
+  font-family: var(--font);
+  padding-left: 8px;
+  border-left: 1px solid var(--mg2);
+}
+
+/* ── MATCH CARD ──────────────────────────────────────────────── */
+.match-card {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.match-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.st-badge {
+  background: var(--mgdim);
+  border: 1px solid rgba(192,0,94,0.25);
+  color: var(--mg3); font-size: 10px; font-weight: 700;
+  padding: 3px 10px; border-radius: 4px;
+  font-family: var(--font); letter-spacing: 0.06em;
+}
+.match-date { font-size: 10px; color: var(--sub); font-family: var(--font); }
+.teams-grid {
+  display: grid; grid-template-columns: 1fr 40px 1fr; gap: 8px; align-items: start;
+}
+.team { border-radius: 6px; padding: 10px 10px; }
+.team.win  { background: var(--winbg);  border: 1px solid rgba(0,184,112,0.2); }
+.team.lose { background: var(--losebg); border: 1px solid rgba(224,48,64,0.2); }
+.team.draw { background: var(--drawbg); border: 1px solid rgba(224,144,0,0.2); }
+.team-lbl {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 7px;
+  font-family: var(--font);
+}
+.team.win  .team-lbl { color: var(--win); }
+.team.lose .team-lbl { color: var(--lose); }
+.team.draw .team-lbl { color: var(--draw); }
+.pill {
+  display: inline-block; border-radius: 3px;
+  padding: 2px 7px; font-size: 11px;
+  margin: 2px 2px 2px 0;
+  background: rgba(255,255,255,0.04);
+  font-family: var(--font);
+  color: var(--text);
+}
+.vs-col {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 6px; padding-top: 12px;
+}
+.vs-txt { font-size: 10px; font-weight: 700; color: var(--sub2); font-family: var(--font); }
+.td-badge {
+  background: rgba(192,0,94,0.3); border: 1px solid rgba(192,0,94,0.4);
+  color: var(--mg3);
+  font-size: 10px; font-weight: 700;
+  padding: 3px 6px; border-radius: 3px;
+  font-family: var(--font);
+}
+
+/* ── TABELLE ─────────────────────────────────────────────────── */
+.table-card {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.table-card table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.table-card thead th {
+  background: var(--card2);
+  color: var(--sub);
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; padding: 8px 10px; text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font);
+}
+.table-card thead th.r { text-align: right; }
+.table-card tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+.table-card tbody tr:last-child { border-bottom: none; }
+.table-card tbody tr:hover { background: rgba(255,255,255,0.02); }
+.table-card tbody td { padding: 7px 10px; font-family: var(--font); }
+.rank-col { width: 30px; font-size: 11px; color: var(--sub); }
+.name-col { font-weight: 700; font-size: 12px; }
+.you-name { color: var(--mg3); }
+.pts-col { text-align: right; font-weight: 700; color: var(--text); font-size: 13px; }
+.td-col { text-align: right; font-size: 11px; }
+.td-pos { color: var(--win); }
+.td-neg { color: var(--lose); }
+.td-zero { color: var(--sub); }
+.hl-row { background: var(--mgdim) !important; border-left: 1px solid rgba(192,0,94,0.4); }
+
+/* ── HISTORY ─────────────────────────────────────────────────── */
+.history-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.history-select {
+  flex: 1;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--text); font-size: 11px;
+  padding: 8px 10px; border-radius: 6px; cursor: pointer;
+  outline: none; font-family: var(--font);
+  backdrop-filter: blur(8px);
+}
+.history-select:focus { border-color: var(--border-a); }
+.nav-arrow {
+  background: var(--card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  color: var(--text); width: 34px; height: 34px;
+  border-radius: 6px; cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.nav-arrow:hover { border-color: var(--border-a); }
+.history-match-card {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px;
+}
+
+/* ── WINNER LIST ─────────────────────────────────────────────── */
+.winner-list { display: flex; flex-direction: column; gap: 6px; }
+.winner-item {
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 11px 14px;
+  display: grid; grid-template-columns: 36px 1fr;
+  gap: 10px; align-items: start;
+  transition: border-color 0.15s;
+}
+.winner-item:hover { border-color: var(--border-a); }
+.wi-num {
+  font-size: 16px; font-weight: 700; color: var(--sub);
+  text-align: center; line-height: 1.3; font-family: var(--font);
+}
+.wi-date { font-size: 10px; color: var(--sub); margin-bottom: 5px; font-family: var(--font); }
+.wi-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+.wi-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; width: 56px; flex-shrink: 0; padding-top: 3px;
+  font-family: var(--font);
+}
+.win-label  { color: var(--win); }
+.lose-label { color: var(--lose); }
+.draw-label { color: var(--draw); }
+.wi-pills { display: flex; flex-wrap: wrap; gap: 3px; }
+.wi-pill {
+  font-size: 10px; padding: 2px 7px; border-radius: 3px;
+  background: rgba(255,255,255,0.04); font-family: var(--font);
+  color: var(--text);
+}
+.wi-pill.win  { background: var(--winbg);  color: #60e0a8; }
+.wi-pill.lose { background: var(--losebg); color: #e08090; }
+.wi-pill.draw { background: var(--drawbg); color: #e0b860; }
+.wi-td {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(192,0,94,0.2); border: 1px solid rgba(192,0,94,0.3);
+  color: var(--mg3); font-size: 9px; font-weight: 700;
+  padding: 1px 6px; border-radius: 3px; font-family: var(--font);
+}
+
+/* ── WIN STATS ───────────────────────────────────────────────── */
+.winstats-grid { display: flex; flex-direction: column; gap: 4px; }
+.ws-item {
+  background: var(--card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 12px;
+  display: flex; align-items: center; gap: 10px;
+  transition: border-color 0.15s;
+}
+.ws-item:hover { border-color: var(--border-a); }
+.ws-rank { font-size: 11px; font-weight: 700; width: 24px; text-align: center; font-family: var(--font); color: var(--sub); }
+.ws-name { flex: 1; font-weight: 600; font-size: 12px; font-family: var(--font); color: var(--text); }
+.ws-bar-wrap { width: 80px; background: rgba(255,255,255,0.06); border-radius: 2px; height: 3px; overflow: hidden; }
+.ws-bar { height: 100%; background: var(--mg2); border-radius: 2px; opacity: 0.6; }
+.ws-count { font-size: 12px; font-weight: 700; color: var(--text); width: 24px; text-align: right; font-family: var(--font); }
+.ws-item.you-row { border-color: rgba(192,0,94,0.25); background: var(--mgdim); }
+.you-name-ws { color: var(--mg3); }
+
+/* ── HALL OF FAME ────────────────────────────────────────────── */
+.hof-list { display: flex; flex-direction: column; gap: 6px; }
+.hof-year-card {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+  transition: border-color 0.15s;
+}
+.hof-year-card:hover { border-color: var(--border-a); }
+.hof-year-card.current-year { border-color: rgba(192,0,94,0.3); }
+.hof-year-header {
+  background: var(--card2); padding: 8px 14px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.hof-year-num {
+  font-size: 16px; font-weight: 700; color: var(--text);
+  font-family: var(--font); letter-spacing: 0.06em;
+}
+.hof-current-badge {
+  background: var(--mgdim); border: 1px solid rgba(192,0,94,0.25);
+  color: var(--mg3); font-size: 9px; font-weight: 700;
+  padding: 2px 8px; border-radius: 3px; text-transform: uppercase;
+  letter-spacing: 0.1em; font-family: var(--font);
+}
+.hof-body { padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; }
+.hof-row { display: flex; align-items: center; gap: 10px; }
+.hof-pos-num { font-size: 10px; font-weight: 700; width: 24px; text-align: center; font-family: var(--font); }
+.hof-pos { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; width: 56px; flex-shrink: 0; font-family: var(--font); }
+.hof-pos.first  { color: var(--gold); }
+.hof-pos.second { color: var(--silver); }
+.hof-name { font-size: 13px; font-weight: 700; font-family: var(--font); color: var(--text); }
+.hof-name.unknown { color: var(--sub); font-style: italic; font-weight: 400; font-size: 12px; }
+.hof-tbd { color: var(--sub); font-size: 11px; font-style: italic; font-family: var(--font); }
+</style>
+</head>
+<body>
+
+<!-- PARTICLE BACKGROUND -->
+<canvas id="bg-canvas"></canvas>
+
+<div class="app">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-wrap">
+    <!-- Vienna Thirstday logo — accurate recreation, transparent bg, 3D Y-axis spin -->
+    <svg class="logo-spin" width="76" height="84" viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Magenta radial gradient: bright centre → dark edges -->
+        <radialGradient id="mgFill" cx="50%" cy="38%" r="65%">
+          <stop offset="0%"   stop-color="#e8007a"/>
+          <stop offset="55%"  stop-color="#c0005e"/>
+          <stop offset="100%" stop-color="#68003a"/>
+        </radialGradient>
+        <!-- Subtle honeycomb texture -->
+        <pattern id="hexP" x="0" y="0" width="13" height="15" patternUnits="userSpaceOnUse">
+          <polygon points="6.5,1 12,4 12,11 6.5,14 1,11 1,4" fill="none" stroke="rgba(0,0,0,0.16)" stroke-width="0.55"/>
+        </pattern>
+        <!-- Field gradient (white → light grey) -->
+        <linearGradient id="fGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#f0f0f0"/>
+          <stop offset="100%" stop-color="#d4d4d4"/>
+        </linearGradient>
+        <!-- Shield content clip -->
+        <clipPath id="sc">
+          <path d="M90 188 L18 143 C11 128 9 84 11 54 C13 38 21 31 33 29 L90 22 L147 29 C159 31 167 38 169 54 C171 84 169 128 162 143 Z"/>
+        </clipPath>
+        <!-- Left tower clip -->
+        <clipPath id="ltc">
+          <polygon points="15,64 60,64 50,152 15,152"/>
+        </clipPath>
+        <!-- Right tower clip -->
+        <clipPath id="rtc">
+          <polygon points="165,64 120,64 130,152 165,152"/>
+        </clipPath>
+      </defs>
+
+      <!-- ══ SHIELD RINGS (outermost → inmost) ══ -->
+      <path d="M90 196 L14 149 C7 133 5 84 7 52 C9 34 18 27 31 25 L90 18 L149 25 C162 27 171 34 173 52 C175 84 173 133 166 149 Z" fill="#111"/>
+      <path d="M90 192 L16 147 C10 131 8 85 10 54 C12 37 20 30 32 28 L90 21 L148 28 C160 30 168 37 170 54 C172 85 170 131 164 147 Z" fill="#fff"/>
+      <path d="M90 188 L18 145 C12 130 10 85 12 55 C14 39 21 32 33 30 L90 23 L147 30 C159 32 166 39 168 55 C170 85 168 130 162 145 Z" fill="#111"/>
+      <!-- Magenta fill -->
+      <path d="M90 184 L20 142 C15 127 13 86 15 58 C17 43 23 37 34 35 L90 28 L146 35 C157 37 163 43 165 58 C167 86 165 127 160 142 Z" fill="url(#mgFill)"/>
+      <path d="M90 184 L20 142 C15 127 13 86 15 58 C17 43 23 37 34 35 L90 28 L146 35 C157 37 163 43 165 58 C167 86 165 127 160 142 Z" fill="url(#hexP)" opacity="0.9"/>
+
+      <!-- ══ SIDE DECORATIONS ══ -->
+      <rect x="5"  y="84" width="20" height="5" rx="1" fill="#111"/>
+      <rect x="5"  y="92" width="20" height="5" rx="1" fill="#fff"/>
+      <rect x="5"  y="100" width="20" height="5" rx="1" fill="#111"/>
+      <rect x="155" y="84" width="20" height="5" rx="1" fill="#111"/>
+      <rect x="155" y="92" width="20" height="5" rx="1" fill="#fff"/>
+      <rect x="155" y="100" width="20" height="5" rx="1" fill="#111"/>
+
+      <!-- ══ SHIELD CONTENT ══ -->
+      <g clip-path="url(#sc)">
+        <!-- White pitch (wider at bottom) -->
+        <polygon points="60,64 120,64 148,185 32,185" fill="url(#fGrad)"/>
+
+        <!-- LEFT TOWER -->
+        <polygon points="15,64 60,64 50,152 15,152" fill="#111"/>
+        <g clip-path="url(#ltc)">
+          <rect x="12" y="64"  width="52" height="11" fill="#111"/>
+          <rect x="12" y="75"  width="52" height="11" fill="#fff"/>
+          <rect x="12" y="86"  width="52" height="11" fill="#111"/>
+          <rect x="12" y="97"  width="52" height="11" fill="#fff"/>
+          <rect x="12" y="108" width="52" height="11" fill="#111"/>
+          <rect x="12" y="119" width="52" height="11" fill="#fff"/>
+          <rect x="12" y="130" width="52" height="11" fill="#111"/>
+          <rect x="12" y="141" width="52" height="11" fill="#fff"/>
+          <!-- Left/dark side face shading -->
+          <polygon points="15,64 26,68 16,152 15,152" fill="rgba(0,0,0,0.55)"/>
+        </g>
+
+        <!-- RIGHT TOWER (mirror) -->
+        <polygon points="165,64 120,64 130,152 165,152" fill="#111"/>
+        <g clip-path="url(#rtc)">
+          <rect x="116" y="64"  width="52" height="11" fill="#111"/>
+          <rect x="116" y="75"  width="52" height="11" fill="#fff"/>
+          <rect x="116" y="86"  width="52" height="11" fill="#111"/>
+          <rect x="116" y="97"  width="52" height="11" fill="#fff"/>
+          <rect x="116" y="108" width="52" height="11" fill="#111"/>
+          <rect x="116" y="119" width="52" height="11" fill="#fff"/>
+          <rect x="116" y="130" width="52" height="11" fill="#111"/>
+          <rect x="116" y="141" width="52" height="11" fill="#fff"/>
+          <!-- Right/dark side face shading -->
+          <polygon points="165,64 154,68 164,152 165,152" fill="rgba(0,0,0,0.45)"/>
+        </g>
+
+        <!-- Black V-notch at bottom of pitch -->
+        <polygon points="50,185 90,152 130,185" fill="#111"/>
+        <!-- Inner V (magenta fill) -->
+        <polygon points="56,185 90,158 124,185" fill="#c0005e"/>
+
+        <!-- ══ WHITE BANNER ══ -->
+        <path d="M 15,62 Q 90,30 165,62 L 165,74 Q 90,52 15,74 Z" fill="#fff"/>
+        <!-- Banner shadow top -->
+        <path d="M 15,62 Q 90,30 165,62 L 165,65 Q 90,33 15,65 Z" fill="rgba(0,0,0,0.08)"/>
+        <!-- Banner text arc -->
+        <path id="barc" d="M 24,68 Q 90,38 156,68" fill="none"/>
+        <text font-family="'Times New Roman',Georgia,serif" font-size="12.5" font-weight="900"
+              fill="#111" letter-spacing="1.8">
+          <textPath href="#barc" startOffset="50%" text-anchor="middle">VIENNA THIRSTDAY</textPath>
+        </text>
+
+        <!-- ══ 2011 BADGE ══ -->
+        <g transform="translate(104,150)">
+          <rect x="0"  y="0"  width="50" height="34" rx="2" fill="#fff" stroke="#111" stroke-width="1.5"/>
+          <rect x="2"  y="2"  width="21" height="16" fill="#c0005e"/>
+          <rect x="25" y="2"  width="23" height="16" fill="#c0005e"/>
+          <!-- Checkmarks -->
+          <path d="M7 12 L10 15 L17 8"  stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M30 12 L33 15 L40 8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Year -->
+          <text x="25" y="31" text-anchor="middle" font-size="11" font-family="Arial,sans-serif"
+                font-weight="bold" fill="#111">2011</text>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div class="header-info">
+    <h1>Vienna Thirstday</h1>
+    <p>Donnerstags Kicken — Saison 2026</p>
+  </div>
+  <div class="update-badge">Stand: 11.06.2026</div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-btn active" onclick="showPanel('overview', this)">Uebersicht</div>
+  <div class="nav-btn" onclick="showPanel('history', this)">Spieltage</div>
+  <div class="nav-btn" onclick="showPanel('winners', this)">Sieger</div>
+  <div class="nav-btn" onclick="showPanel('winstats', this)">Wins</div>
+  <div class="nav-btn" onclick="showPanel('hof', this)">Hall of Fame</div>
+</div>
+
+<!-- PANEL: UEBERSICHT -->
+<div class="panel active" id="panel-overview">
+  <div class="stats-row">
+    <div class="stat-card"><div class="num">23</div><div class="lbl">Letzter ST</div></div>
+    <div class="stat-card"><div class="num">14</div><div class="lbl">Gespielt</div></div>
+    <div class="stat-card"><div class="num">28</div><div class="lbl">Noch offen</div></div>
+  </div>
+  <div class="section-label">Letzter Spieltag</div>
+  <div class="match-card" id="last-match-card"></div>
+  <div class="section-label">Aktuelle Tabelle</div>
+  <div class="table-card">
+    <table>
+      <thead><tr><th>#</th><th>Spieler</th><th class="r">Pkt</th><th class="r">TD</th></tr></thead>
+      <tbody id="tabelle-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PANEL: SPIELTAGE -->
+<div class="panel" id="panel-history">
+  <div class="history-header">
+    <button class="nav-arrow" onclick="histNav(-1)">&#8249;</button>
+    <select class="history-select" id="hist-select" onchange="histShow(parseInt(this.value))"></select>
+    <button class="nav-arrow" onclick="histNav(1)">&#8250;</button>
+  </div>
+  <div id="history-card-container"></div>
+</div>
+
+<!-- PANEL: SIEGER -->
+<div class="panel" id="panel-winners">
+  <div class="section-label">Alle Spieltage — Sieger und Verlierer</div>
+  <div class="winner-list" id="winner-list"></div>
+</div>
+
+<!-- PANEL: WINS -->
+<div class="panel" id="panel-winstats">
+  <div class="section-label">Meiste Siege — Spieler-Ranking</div>
+  <div class="winstats-grid" id="winstats-list"></div>
+</div>
+
+<!-- PANEL: HOF -->
+<div class="panel" id="panel-hof">
+  <div class="section-label">Hall of Fame — Saisonsieger</div>
+  <div class="hof-list" id="hof-list"></div>
+</div>
+
+</div><!-- .app -->
+
+<script>
+// ─── SOCCER BALL BACKGROUND ──────────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H;
+  const N     = 18;   // number of balls
+  const balls = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function mkBall() {
+    const r = Math.random() * 14 + 8;       // radius 8–22 px
+    return {
+      x:     Math.random() * W,
+      y:     Math.random() * H,
+      r:     r,
+      vx:    (Math.random() - 0.5) * 0.55,
+      vy:    (Math.random() - 0.5) * 0.55,
+      spin:  (Math.random() - 0.5) * 0.04,  // rotation speed
+      angle: Math.random() * Math.PI * 2,
+      alpha: Math.random() * 0.13 + 0.06,   // subtle, 0.06–0.19
+    };
+  }
+
+  function drawBall(b) {
+    const {x, y, r, angle, alpha} = b;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.globalAlpha = alpha;
+
+    // White circle
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+
+    // Black pentagon patches — classic soccer ball pattern
+    // Centre pentagon
+    ctx.fillStyle = '#000';
+    drawPentagon(ctx, 0, 0, r * 0.38);
+
+    // 5 surrounding pentagons
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+      const d = r * 0.72;
+      drawPentagon(ctx, Math.cos(a) * d, Math.sin(a) * d, r * 0.28);
+    }
+
+    ctx.restore();
+  }
+
+  function drawPentagon(ctx, cx, cy, size) {
+    ctx.beginPath();
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+      const px = cx + Math.cos(a) * size;
+      const py = cy + Math.sin(a) * size;
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function init() {
+    resize();
+    for (let i = 0; i < N; i++) balls.push(mkBall());
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    balls.forEach(b => {
+      b.x     += b.vx;
+      b.y     += b.vy;
+      b.angle += b.spin;
+      // Wrap around edges
+      if (b.x < -b.r)  b.x = W + b.r;
+      if (b.x > W+b.r) b.x = -b.r;
+      if (b.y < -b.r)  b.y = H + b.r;
+      if (b.y > H+b.r) b.y = -b.r;
+      drawBall(b);
+    });
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', resize);
+  init();
+  loop();
+})();
+
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const STANDINGS = [
+  {rank:1,  name:"Mathias", pts:34, td:26},
+  {rank:2,  name:"Benji",   pts:31, td:13},
+  {rank:3,  name:"Jovica",  pts:31, td:3},
+  {rank:4,  name:"Coach",   pts:31, td:0},
+  {rank:5,  name:"Viktor",  pts:24, td:6},
+  {rank:6,  name:"Vincent", pts:24, td:6},
+  {rank:7,  name:"Hanna",   pts:22, td:-15},
+  {rank:8,  name:"Aleks",   pts:21, td:1},
+  {rank:9,  name:"Marco",   pts:18, td:-20},
+  {rank:10, name:"Dommsch", pts:17, td:8},
+  {rank:11, name:"Richi",   pts:17, td:-8},
+  {rank:12, name:"Leon",    pts:15, td:-11},
+  {rank:13, name:"Tom",     pts:14, td:13},
+  {rank:14, name:"Sascha",  pts:14, td:5},
+  {rank:15, name:"Alexis",  pts:14, td:-10},
+  {rank:16, name:"Tomek",   pts:13, td:3},
+  {rank:17, name:"David J", pts:7,  td:-1},
+  {rank:18, name:"Max V",   pts:6,  td:-9},
+  {rank:19, name:"Albin",   pts:5,  td:-2},
+  {rank:20, name:"Speidi",  pts:1,  td:-2},
+  {rank:21, name:"Juergen", pts:2,  td:0},
+  {rank:22, name:"Shipi",   pts:2,  td:0},
+  {rank:23, name:"Jakob",   pts:1,  td:-2},
+  {rank:24, name:"Daki",    pts:0,  td:0},
+  {rank:25, name:"Rain",    pts:0,  td:0},
+  {rank:26, name:"Robert",  pts:0,  td:0},
+  {rank:27, name:"Mundi",   pts:0,  td:0},
+  {rank:28, name:"David K", pts:0,  td:0},
+];
+
+const SPIELTAGE = [
+  {spieltag:2,  datum:"15.01.2026", winners:["Vincent","Aleksis","Benji","Viktor","Richi","Jovica","Sascha"],   losers:["Coach","Mathias","Marco","Max V","Dommsch","Jakob","Aleks"],           draws:[], tordiff:2},
+  {spieltag:5,  datum:"05.02.2026", winners:["Vincent","Tom","Hanna","Benji","Mathias","Max H.","Sascha"],       losers:["Coach","Aleksis","David J","Richi","Marco","Jovica","Aleks"],          draws:[], tordiff:7},
+  {spieltag:6,  datum:"12.02.2026", winners:["Benji","Mathias","Marco","Jovica"],                                losers:["Vincent","Coach","Viktor","Max V"],                                    draws:[], tordiff:3},
+  {spieltag:8,  datum:"26.02.2026", winners:["Coach","David J","Viktor","Mathias","Jovica","Dommsch","Aleks"],   losers:["Vincent","Aleksis","Hanna","Richi","Marco","Leon"],                    draws:[], tordiff:6},
+  {spieltag:9,  datum:"05.03.2026", winners:[], losers:[], draws:["Vincent","Coach","Tomek","Aleksis","Hanna","David J","Marco","Max H.","Leon","Jovica","Max V","Dommsch","Aleks","Sascha"],    tordiff:0},
+  {spieltag:10, datum:"12.03.2026", winners:["Aleksis","Hanna","Mathias","Leon","Dommsch"],                      losers:["Coach","Tomek","Benji","Marco","Jovica","Aleks"],                      draws:[], tordiff:1},
+  {spieltag:11, datum:"19.03.2026", winners:["Vincent","Coach","Richi","Mathias","Aleks"],                       losers:["Hanna","Benji","Marco","Leon"],                                        draws:[], tordiff:5},
+  {spieltag:13, datum:"02.04.2026", winners:[], losers:[], draws:["Vincent","Coach","Juergen","Aleksis","Benji","Richi","Mathias","Max H.","Jovica","Sascha"],                                    tordiff:0},
+  {spieltag:16, datum:"23.04.2026", winners:["Coach","Tom","Benji","Viktor","Mathias","Aleks"],                  losers:["Hanna","Albin","Marco","Jovica","Max V","Sascha"],                     draws:[], tordiff:3},
+  {spieltag:18, datum:"07.05.2026", winners:[], losers:[], draws:["Vincent","Coach","Shipi","Tomek","Tom","Hanna","Benji","Viktor","Mathias","Marco","Leon","Jovica","Dommsch","Aleks"],          tordiff:0},
+  {spieltag:20, datum:"21.05.2026", winners:["Vincent","Coach","Tomek","Hanna","Albin","Viktor","Marco"],        losers:["Leon","Jovica","Max V","Aleks","Sascha"],                              draws:[], tordiff:1},
+  {spieltag:21, datum:"28.05.2026", winners:["Benji","Mathias","Max H.","Jovica"],                               losers:["Coach","Hanna","Viktor","Richi"],                                      draws:[], tordiff:5},
+  {spieltag:22, datum:"04.06.2026", winners:["Coach","Tomek","Tom","Richi","Leon","Dommsch"],                    losers:["Hanna","Benji","Max H.","Jovica"],                                     draws:[], tordiff:3},
+  {spieltag:23, datum:"11.06.2026", winners:["Benji","Viktor","Jovica"],                                        losers:["Mathias","Aleks","Hanna","Speidi"],                                     draws:[], tordiff:2},
+];
+
+const HOF = [
+  { year:2026, current:true,  first:null,       second:null,      tbd:true },
+  { year:2025, current:false, first:"Mathias",   second:"Richi" },
+  { year:2024, current:false, first:"Mathias",   second:"Coach" },
+  { year:2023, current:false, first:"David J.",  second:null },
+  { year:2022, current:false, first:"David J.",  second:"Juergen" },
+  { year:2021, current:false, first:"Shipi",     second:null },
+];
+
+const YOU = "Viktor";
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function fmtTD(td) {
+  if (td > 0) return `<span class="td-pos">+${td}</span>`;
+  if (td < 0) return `<span class="td-neg">${td}</span>`;
+  return `<span class="td-zero">0</span>`;
+}
+
+function renderMatchBlock(st, container) {
+  const isDraw = st.winners.length === 0 && st.draws.length > 0;
+  let html = `<div class="match-meta">
+    <span class="st-badge">Spieltag ${st.spieltag}</span>
+    <span class="match-date">${st.datum}</span>
+  </div>`;
+  if (isDraw) {
+    html += `<div class="teams-grid" style="grid-template-columns:1fr">
+      <div class="team draw"><div class="team-lbl">Unentschieden</div>
+        ${st.draws.map(p=>`<span class="pill">${p}</span>`).join('')}
+      </div></div>`;
+  } else {
+    html += `<div class="teams-grid">
+      <div class="team win"><div class="team-lbl">Sieger  +${st.tordiff}</div>
+        ${st.winners.map(p=>`<span class="pill">${p}</span>`).join('')}
+      </div>
+      <div class="vs-col"><div class="vs-txt">VS</div><div class="td-badge">+${st.tordiff}</div></div>
+      <div class="team lose"><div class="team-lbl">Verlierer  -${st.tordiff}</div>
+        ${st.losers.map(p=>`<span class="pill">${p}</span>`).join('')}
+      </div>
+    </div>`;
+  }
+  container.innerHTML = html;
+}
+
+function renderTabelle() {
+  const tbody = document.getElementById('tabelle-body');
+  tbody.innerHTML = '';
+  STANDINGS.forEach(p => {
+    const tr = document.createElement('tr');
+    if (p.name === YOU) tr.classList.add('hl-row');
+    const rc = p.rank===1?'var(--gold)':p.rank===2?'var(--silver)':p.rank===3?'var(--bronze)':'var(--sub)';
+    const nameStr = p.name === YOU ? `<span class="you-name">${p.name}</span>` : p.name;
+    tr.innerHTML = `
+      <td class="rank-col"><span style="color:${rc};font-weight:700">${p.rank}.</span></td>
+      <td class="name-col">${nameStr}</td>
+      <td class="pts-col">${p.pts}</td>
+      <td class="td-col">${fmtTD(p.td)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderLastMatch() {
+  renderMatchBlock(SPIELTAGE[SPIELTAGE.length-1], document.getElementById('last-match-card'));
+}
+
+let histIdx = SPIELTAGE.length - 1;
+function initHistory() {
+  const sel = document.getElementById('hist-select');
+  SPIELTAGE.forEach((st,i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `Spieltag ${st.spieltag}  |  ${st.datum}`;
+    if (i === histIdx) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  histShow(histIdx);
+}
+function histShow(idx) {
+  histIdx = Math.max(0, Math.min(SPIELTAGE.length-1, idx));
+  document.getElementById('hist-select').value = histIdx;
+  const c = document.getElementById('history-card-container');
+  c.innerHTML = '<div class="history-match-card" id="hist-card"></div>';
+  renderMatchBlock(SPIELTAGE[histIdx], document.getElementById('hist-card'));
+}
+function histNav(dir) { histShow(histIdx+dir); }
+
+function renderWinners() {
+  const c = document.getElementById('winner-list');
+  c.innerHTML = '';
+  [...SPIELTAGE].reverse().forEach(st => {
+    const isDraw = st.winners.length === 0 && st.draws.length > 0;
+    const div = document.createElement('div');
+    div.className = 'winner-item';
+    let inner = `<div class="wi-date">${st.datum}</div>`;
+    if (isDraw) {
+      inner += `<div class="wi-row"><span class="wi-label draw-label">Unentschieden</span>
+        <div class="wi-pills">${st.draws.map(p=>`<span class="wi-pill draw">${p}</span>`).join('')}</div></div>`;
+    } else {
+      inner += `<div class="wi-row"><span class="wi-label win-label">Sieger</span>
+        <div class="wi-pills">${st.winners.map(p=>`<span class="wi-pill win">${p}</span>`).join('')}
+        <span class="wi-td">+${st.tordiff}</span></div></div>
+        <div class="wi-row"><span class="wi-label lose-label">Verlierer</span>
+        <div class="wi-pills">${st.losers.map(p=>`<span class="wi-pill lose">${p}</span>`).join('')}</div></div>`;
+    }
+    div.innerHTML = `<div class="wi-num">${st.spieltag}</div><div>${inner}</div>`;
+    c.appendChild(div);
+  });
+}
+
+function renderWinStats() {
+  const wc = {};
+  SPIELTAGE.forEach(st => st.winners.forEach(p => { wc[p]=(wc[p]||0)+1; }));
+  const sorted = Object.entries(wc).sort((a,b)=>b[1]-a[1]);
+  const maxW = sorted[0]?.[1]||1;
+  const c = document.getElementById('winstats-list');
+  c.innerHTML = '';
+  sorted.forEach(([name,wins],i) => {
+    const div = document.createElement('div');
+    div.className = 'ws-item'+(name===YOU?' you-row':'');
+    const rc = i===0?'var(--gold)':i===1?'var(--silver)':i===2?'var(--bronze)':'var(--sub)';
+    div.innerHTML = `
+      <div class="ws-rank" style="color:${rc}">${i+1}.</div>
+      <div class="ws-name ${name===YOU?'you-name-ws':''}">${name}</div>
+      <div class="ws-bar-wrap"><div class="ws-bar" style="width:${Math.round(wins/maxW*100)}%"></div></div>
+      <div class="ws-count">${wins}</div>`;
+    c.appendChild(div);
+  });
+}
+
+function renderHoF() {
+  const c = document.getElementById('hof-list');
+  c.innerHTML = '';
+  HOF.forEach(h => {
+    const card = document.createElement('div');
+    card.className = 'hof-year-card'+(h.current?' current-year':'');
+    const fHtml = h.tbd ? `<span class="hof-tbd">Saison laeuft noch...</span>`
+                        : `<span class="hof-name">${h.first||'—'}</span>`;
+    const sHtml = h.tbd ? `<span class="hof-tbd">Saison laeuft noch...</span>`
+                        : h.second ? `<span class="hof-name">${h.second}</span>`
+                        : `<span class="hof-name unknown">nicht bekannt</span>`;
+    card.innerHTML = `
+      <div class="hof-year-header">
+        <span class="hof-year-num">${h.year}</span>
+        ${h.current?'<span class="hof-current-badge">Aktuelle Saison</span>':''}
+      </div>
+      <div class="hof-body">
+        <div class="hof-row">
+          <span class="hof-pos-num" style="color:var(--gold)">01.</span>
+          <span class="hof-pos first">Sieger</span>${fHtml}
+        </div>
+        <div class="hof-row">
+          <span class="hof-pos-num" style="color:var(--silver)">02.</span>
+          <span class="hof-pos second">2. Platz</span>${sHtml}
+        </div>
+      </div>`;
+    c.appendChild(card);
+  });
+}
+
+function showPanel(name, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+renderTabelle();
+renderLastMatch();
+initHistory();
+renderWinners();
+renderWinStats();
+renderHoF();
+</script>
+</body>
+</html>
