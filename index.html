@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vienna Thirstday 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   color-scheme: light;
@@ -30,6 +31,7 @@
   --silver: #8898a8;
   --bronze: #a06830;
   --font: 'Courier New', Courier, 'Lucida Console', monospace;
+  --font-head: 'Oswald', sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 14px; }
@@ -88,7 +90,7 @@ body {
   color: var(--text);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-family: var(--font);
+  font-family: var(--font-head);
 }
 .header-info p {
   font-size: 10px;
@@ -131,7 +133,7 @@ body {
   cursor: pointer;
   transition: all 0.18s;
   text-align: center;
-  font-family: var(--font);
+  font-family: var(--font-head);
 }
 .nav-btn:hover { border-color: var(--border-a); color: var(--text); }
 .nav-btn.active { background: var(--mgdim); border-color: rgba(192,0,94,0.35); color: var(--mg3); }
@@ -176,7 +178,7 @@ body {
 .section-label {
   font-size: 9px; font-weight: 700; text-transform: uppercase;
   letter-spacing: 0.16em; color: var(--sub2); margin-bottom: 6px;
-  font-family: var(--font);
+  font-family: var(--font-head);
   padding-left: 8px;
   border-left: 1px solid var(--mg2);
 }
@@ -719,11 +721,11 @@ const SPIELTAGE = [
   {spieltag:2,  datum:"15.01.2026", winners:["Vincent","Aleksis","Benji","Viktor","Richi","Jovica","Sascha"],   losers:["Coach","Mathias","Marco","Max V","Dommsch","Jakob","Aleks"],           draws:[], tordiff:2},
   {spieltag:5,  datum:"05.02.2026", winners:["Vincent","Tom","Hanna","Benji","Mathias","Max H.","Sascha"],       losers:["Coach","Aleksis","David J","Richi","Marco","Jovica","Aleks"],          draws:[], tordiff:7},
   {spieltag:6,  datum:"12.02.2026", winners:["Benji","Mathias","Marco","Jovica"],                                losers:["Vincent","Coach","Viktor","Max V"],                                    draws:[], tordiff:3},
-  {spieltag:8,  datum:"26.02.2026", winners:["Coach","David J","Viktor","Mathias","Jovica","Dommsch","Aleks"],   losers:["Vincent","Aleksis","Hanna","Richi","Marco","Leon"],                    draws:[], tordiff:6},
+  {spieltag:8,  datum:"26.02.2026", winners:["Coach","David J","Viktor","Mathias","Jovica","Dommsch","Aleks"],   losers:["Vincent","Aleksis","Hanna","Richi","Marco","Leon"],                   draws:[], tordiff:6},
   {spieltag:9,  datum:"05.03.2026", winners:[], losers:[], draws:["Vincent","Coach","Tomek","Aleksis","Hanna","David J","Marco","Max H.","Leon","Jovica","Max V","Dommsch","Aleks","Sascha"],    tordiff:0},
-  {spieltag:10, datum:"12.03.2026", winners:["Aleksis","Hanna","Mathias","Leon","Dommsch"],                      losers:["Coach","Tomek","Benji","Marco","Jovica","Aleks"],                      draws:[], tordiff:1},
-  {spieltag:11, datum:"19.03.2026", winners:["Vincent","Coach","Richi","Mathias","Aleks"],                       losers:["Hanna","Benji","Marco","Leon"],                                        draws:[], tordiff:5},
-  {spieltag:13, datum:"02.04.2026", winners:[], losers:[], draws:["Vincent","Coach","Juergen","Aleksis","Benji","Richi","Mathias","Max H.","Jovica","Sascha"],                                    tordiff:0},
+  {spieltag:10, datum:"12.03.2026", winners:["Aleksis","Hanna","Mathias","Leon","Dommsch"],                      losers:["Coach","Tomek","Benji","Marco","Jovica","Aleks"],                        draws:[], tordiff:1},
+  {spieltag:11, datum:"19.03.2026", winners:["Vincent","Coach","Richi","Mathias","Aleks"],                        losers:["Hanna","Benji","Marco","Leon"],                                       draws:[], tordiff:5},
+  {spieltag:13, datum:"02.04.2026", winners:[], losers:[], draws:["Vincent","Coach","Juergen","Aleksis","Benji","Richi","Mathias","Max H.","Jovica","Sascha"],                                     tordiff:0},
   {spieltag:16, datum:"23.04.2026", winners:["Coach","Tom","Benji","Viktor","Mathias","Aleks"],                  losers:["Hanna","Albin","Marco","Jovica","Max V","Sascha"],                     draws:[], tordiff:3},
   {spieltag:18, datum:"07.05.2026", winners:[], losers:[], draws:["Vincent","Coach","Shipi","Tomek","Tom","Hanna","Benji","Viktor","Mathias","Marco","Leon","Jovica","Dommsch","Aleks"],          tordiff:0},
   {spieltag:20, datum:"21.05.2026", winners:["Vincent","Coach","Tomek","Hanna","Albin","Viktor","Marco"],        losers:["Leon","Jovica","Max V","Aleks","Sascha"],                              draws:[], tordiff:1},
@@ -766,7 +768,7 @@ function renderMatchBlock(st, container) {
       <div class="team win"><div class="team-lbl">Sieger  +${st.tordiff}</div>
         ${st.winners.map(p=>`<span class="pill">${p}</span>`).join('')}
       </div>
-      <div class="vs-col"><div class="vs-txt">VS</div><div class="td-badge">+${st.tordiff}</div></div>
+      <div class="vs-col"><div class="vs-txt">VS</div><d class="td-badge">+${st.tordiff}</div></div>
       <div class="team lose"><div class="team-lbl">Verlierer  -${st.tordiff}</div>
         ${st.losers.map(p=>`<span class="pill">${p}</span>`).join('')}
       </div>
@@ -782,7 +784,7 @@ function renderTabelle() {
     const tr = document.createElement('tr');
     if (p.name === YOU) tr.classList.add('hl-row');
     const rc = p.rank===1?'var(--gold)':p.rank===2?'var(--silver)':p.rank===3?'var(--bronze)':'var(--sub)';
-    const nameStr = p.name === YOU ? `<span class="you-name">${p.name}</span>` : p.name;
+    const nameStr = p.rank === 1 ? `<span class="you-name">${p.name}</span>` : p.name;
     tr.innerHTML = `
       <td class="rank-col"><span style="color:${rc};font-weight:700">${p.rank}.</span></td>
       <td class="name-col">${nameStr}</td>
@@ -877,13 +879,9 @@ function renderHoF() {
         ${h.current?'<span class="hof-current-badge">Aktuelle Saison</span>':''}
       </div>
       <div class="hof-body">
-        <div class="hof-row">
-          <span class="hof-pos-num" style="color:var(--gold)">01.</span>
-          <span class="hof-pos first">Sieger</span>${fHtml}
+        <div class="hof-row">          <span class="hof-pos first">Sieger</span>${fHtml}
         </div>
-        <div class="hof-row">
-          <span class="hof-pos-num" style="color:var(--silver)">02.</span>
-          <span class="hof-pos second">2. Platz</span>${sHtml}
+        <div class="hof-row">          <span class="hof-pos second">2. Platz</span>${sHtml}
         </div>
       </div>`;
     c.appendChild(card);
