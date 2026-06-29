@@ -732,81 +732,106 @@ const SPIELTAGE = [
   {spieltag:9,  datum:"05.03.2026", winners:[], losers:[], draws:["Vincent","Coach","Tomek","Aleksis","Hanna","David J","Marco","Max H.","Leon","Jovica","Max V","Dommsch","Aleks","Sascha"],    tordiff:0},
   {spieltag:10, datum:"12.03.2026", winners:["Aleksis","Hanna","Mathias","Leon","Dommsch"],                      losers:["Coach","Tomek","Benji","Marco","Jovica","Aleks"],                      draws:[], tordiff:1},
   {spieltag:11, datum:"19.03.2026", winners:["Vincent","Coach","Richi","Mathias","Aleks"],                       losers:["Hanna","Benji","Marco","Leon"],                                        draws:[], tordiff:5},
-  {spieltag:13, datum:"02.04.2026", winners:[], losers:[], draws:["Vincent","Coach","Juergen","Aleksis","Benji","Richi","Mathias","Max H.","Jovica","Sascha"],                    tordiff:0},
-  {spieltag:14, datum:"16.04.2026", winners:["Vincent","Coach","Benji","Mathias","Hanna","Tom"],                      losers:["Richi","Jovica","Dommsch","Marco"],                                              draws:[], tordiff:12},
-  {spieltag:15, datum:"23.04.2026", winners:["Benji","Mathias","Jovica","Vincent","Tom","Richi","Viktor"],               losers:["Hanna","Coach","Marco","Aleks","Speidi"],                                     draws:[], tordiff:12},
-  {spieltag:16, datum:"30.04.2026", winners:["Viktor","Coach","Marco","Richi","Tom","Aleks"],                         losers:["Benji","Jovica","Vincent","Mathias","Hanna"],                                    draws:[], tordiff:9},
-  {spieltag:17, datum:"07.05.2026", winners:["Vincent","Benji","Mathias","Coach","Jovica"],                            losers:["Viktor","Aleks","Marco","Richi","Tom"],                                             draws:[], tordiff:10},
-  {spieltag:18, datum:"14.05.2026", winners:["Viktor","Benji","Jovica","Vincent","Richi"],                             losers:["Coach","Mathias","Aleks","Marco","Tom"],                                            draws:[], tordiff:6},
-  {spieltag:19, datum:"21.05.2026", winners:["Benji","Mathias","Viktor","Coach","Richi"],                             losers:["Vincent","Jovica","Aleks","Marco"],                                                draws:[], tordiff:4},
-  {spieltag:20, datum:"28.05.2026", winners:["Vincent","Benji","Mathias","Jovica","Aleks"],                            losers:["Coach","Viktor","Richi","Marco","Tom"],                                             draws:[], tordiff:7},
-  {spieltag:21, datum:"04.06.2026", winners:["Coach","Benji","Mathias","Viktor","Tom"],                                 losers:["Vincent","Jovica","Aleks","Marco"],                                                draws:[], tordiff:5},
-  {spieltag:22, datum:"11.06.2026", winners:["Coach","Viktor","Jovica","Marco","Aleks"],                               losers:["Benji","Vincent","Mathias","Richi","Tom"],                                           draws:[], tordiff:3},
-  {spieltag:23, datum:"18.06.2026", winners:["Benji","Vincent","Mathias","Richi","Tom"],                                losers:["Coach","Jovica","Viktor","Aleks","Marco"],                                       draws:[], tordiff:3},
-  {spieltag:25, datum:"25.06.2026", winners:["Coach","Vincent","Marco","Richi","Tom","Fito"],                           losers:["Jovica","Viktor","Aleks","David J","Speidi"],                                        draws:[], tordiff:9},
+  {spieltag:13, datum:"02.04.2026", winners:[], losers:[], draws:["Vincent","Coach","Juergen","Aleksis","Benji","Richi","Mathias","Max H.","Jovica","Sascha"],                                    tordiff:0},
+  {spieltag:16, datum:"23.04.2026", winners:["Coach","Tom","Benji","Viktor","Mathias","Aleks"],                  losers:["Hanna","Albin","Marco","Jovica","Max V","Sascha"],                     draws:[], tordiff:3},
+  {spieltag:18, datum:"07.05.2026", winners:[], losers:[], draws:["Vincent","Coach","Shipi","Tomek","Tom","Hanna","Benji","Viktor","Mathias","Marco","Leon","Jovica","Dommsch","Aleks"],          tordiff:0},
+  {spieltag:20, datum:"21.05.2026", winners:["Vincent","Coach","Tomek","Hanna","Albin","Viktor","Marco"],        losers:["Leon","Jovica","Max V","Aleks","Sascha"],                              draws:[], tordiff:1},
+  {spieltag:21, datum:"28.05.2026", winners:["Benji","Mathias","Max H.","Jovica"],                               losers:["Coach","Hanna","Viktor","Richi"],                                      draws:[], tordiff:5},
+  {spieltag:22, datum:"04.06.2026", winners:["Coach","Tomek","Tom","Richi","Leon","Dommsch"],                    losers:["Hanna","Benji","Max H.","Jovica"],                                     draws:[], tordiff:3},
+  {spieltag:23, datum:"11.06.2026", winners:["Benji","Viktor","Jovica"],                                                   losers:["Mathias","Aleks","Hanna","Speidi"],                                              draws:[], tordiff:2},
+  {spieltag:24, datum:"18.06.2026", winners:["Benji","Viktor","Vincent","Richi","Tom","Tomek","Milan"],            losers:["Hanna","Jovica","Max V","Marco","Aleks","Andres"],                        draws:[], tordiff:2},
+  {spieltag:25, datum:"25.06.2026", winners:["Coach","Vincent","Marco","Richi","Tom","Fito"],                      losers:["Jovica","Viktor","Aleks","David J","Speidi"],                              draws:[], tordiff:9},
 ];
 
 const HOF = [
-  {year: 2025, name: "Mathias", note: "Saisonsieger 2025", lucky: true},
-  {year: 2024, name: "Benji",   note: "Saisonsieger 2024"},
-  {year: 2023, name: "Benji",   note: "Saisonsieger 2023"},
-  {year: 2022, name: "Richi",   note: "Saisonsieger 2022"},
-  {year: 2021, name: "Coach",   note: "Saisonsieger 2021"},
-  {year: 2020, name: "Coach",   note: "Saisonsieger 2020"},
-  {year: 2019, name: "Jovica",  note: "Saisonsieger 2019"},
-  {year: 2018, name: "Coach",   note: "Saisonsieger 2018"},
-  {year: 2017, name: "Coach",   note: "Saisonsieger 2017"},
+  { year:2026, current:true,  first:null,       second:null,      tbd:true },
+  { year:2025, current:false, first:"Mathias",   second:"Richi" },
+  { year:2024, current:false, first:"Mathias",   second:"Coach" },
+  { year:2023, current:false, first:"David J.",  second:null },
+  { year:2022, current:false, first:"David J.",  second:"Juergen" },
+  { year:2021, current:false, first:"Shipi",     second:null },
 ];
 
-// ─── UI ──────────────────────────────────────────────────────────────────────────
-function showPanel(id, btn) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + id).classList.add('active');
-  btn.classList.add('active');
+const YOU = "Viktor";
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function fmtTD(td) {
+  if (td > 0) return `<span class="td-pos">+${td}</span>`;
+  if (td < 0) return `<span class="td-neg">${td}</span>`;
+  return `<span class="td-zero">0</span>`;
+}
+
+function renderMatchBlock(st, container) {
+  const isDraw = st.winners.length === 0 && st.draws.length > 0;
+  let html = `<div class="match-meta">
+    <span class="st-badge">Spieltag ${st.spieltag}</span>
+    <span class="match-date">${st.datum}</span>
+  </div>`;
+  if (isDraw) {
+    html += `<div class="teams-grid" style="grid-template-columns:1fr">
+      <div class="team draw"><div class="team-lbl">Unentschieden</div>
+        ${st.draws.map(p=>`<span class="pill">${p}</span>`).join('')}
+      </div></div>`;
+  } else {
+    html += `<div class="teams-grid">
+      <div class="team win"><div class="team-lbl">Sieger  +${st.tordiff}</div>
+        ${st.winners.map(p=>`<span class="pill">${p}</span>`).join('')}
+      </div>
+      <div class="vs-col"><div class="vs-txt">VS</div><div class="td-badge">+${st.tordiff}</div></div>
+      <div class="team lose"><div class="team-lbl">Verlierer  -${st.tordiff}</div>
+        ${st.losers.map(p=>`<span class="pill">${p}</span>`).join('')}
+      </div>
+    </div>`;
+  }
+  container.innerHTML = html;
 }
 
 function renderTabelle() {
   const tbody = document.getElementById('tabelle-body');
-  tbody.innerHTML = STANDINGS.map((p, i) => {
-    const isTop3 = i < 3;
-    return `<tr${isTop3 ? ' class="top3-row"' : ''}>
-      <td>${p.rank}</td>
-      <td>${p.name}</td>
-      <td class="r">${p.pts}</td>
-      <td class="r">${p.td >= 0 ? '+' + p.td : p.td}</td>
-    </tr>`;
-  }).join('');
-}
-
-function renderStats() {
-  const last = SPIELTAGE[SPIELTAGE.length - 1];
-  document.getElementById('stat-last-st').textContent  = 'ST ' + last.spieltag;
-  document.getElementById('stat-gespielt').textContent = SPIELTAGE.length;
-  document.getElementById('stat-offen').textContent    = '38 — ' + SPIELTAGE.length + ' = ' + (38 - SPIELTAGE.length);
+  tbody.innerHTML = '';
+  STANDINGS.forEach(p => {
+    const tr = document.createElement('tr');
+    if (p.name === YOU) tr.classList.add('hl-row');
+    const rc = p.rank===1?'var(--gold)':p.rank===2?'var(--silver)':p.rank===3?'var(--bronze)':'var(--sub)';
+    const nameStr = p.rank === 1 ? `<span class="you-name">${p.name}</span>` : p.name;
+    tr.innerHTML = `
+      <td class="rank-col"><span style="color:${rc};font-weight:700">${p.rank}.</span></td>
+      <td class="name-col">${nameStr}</td>
+      <td class="pts-col">${p.pts}</td>
+      <td class="td-col">${fmtTD(p.td)}</td>`;
+    tbody.appendChild(tr);
+  });
 }
 
 function renderLastMatch() {
-  const match = SPIELTAGE[SPIELTAGE.length - 1];
-  const { spieltag, datum, winners, losers, draws, tordiff } = match;
-  const isDraw = draws.length > 0;
-  const score = isDraw ? '-' : ((4 * winners.length + 1 * losers.length) + ':' + (1 * winners.length + 4 * losers.length));
-  document.getElementById('last-match-card').innerHTML = `
-    <div class="match-header">
-      <span>Spieltag ${spieltag}</span>
-      <span>${datum}</span>
-    </div>
-    <div class="match-teams">
-      ${isDraw ? `<div class="team"><div class="team-label">GETEILT</div><div class="players">${draws.join(', ')}</div></div>` : `
-      <div class="team win"><div class="team-label">SIEGER — ${score}</div><div class="players">${winners.join(', ')}</div></div>
-      <div class="team lose"><div class="team-label">VERLIERER</div><div class="players">${losers.join(', ')}</div></div>
-      `}
-    </div>
-    <div class="match-tordiff">Tordiff: ${tordiff}</div>
-  `;
+  renderMatchBlock(SPIELTAGE[SPIELTAGE.length-1], document.getElementById('last-match-card'));
 }
 
-// ─── HISTORY PANEL ───st => {
+let histIdx = SPIELTAGE.length - 1;
+function initHistory() {
+  const sel = document.getElementById('hist-select');
+  SPIELTAGE.forEach((st,i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `Spieltag ${st.spieltag}  |  ${st.datum}`;
+    if (i === histIdx) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  histShow(histIdx);
+}
+function histShow(idx) {
+  histIdx = Math.max(0, Math.min(SPIELTAGE.length-1, idx));
+  document.getElementById('hist-select').value = histIdx;
+  const c = document.getElementById('history-card-container');
+  c.innerHTML = '<div class="history-match-card" id="hist-card"></div>';
+  renderMatchBlock(SPIELTAGE[histIdx], document.getElementById('hist-card'));
+}
+function histNav(dir) { histShow(histIdx+dir); }
+
+function renderWinners() {
+  const c = document.getElementById('winner-list');
+  c.innerHTML = '';
+  [...SPIELTAGE].reverse().forEach(st => {
     const isDraw = st.winners.length === 0 && st.draws.length > 0;
     const div = document.createElement('div');
     div.className = 'winner-item';
